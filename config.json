@@ -1,8 +1,11 @@
 {
     "assets": 
     {
-        "yahoo_finance_symbols": ["SPY", "XOP", "AAPL", "SLG", "VIRT", "BTC-USD", "ETH-USD", "ADA-USD"]
+        "stock_symbols": ["SPY", "XOP", "AAPL", "SLG", "VIRT"],
+        "crypto_symbols": ["BTC-USD", "ETH-USD", "ADA-USD"]
     },
-    "max_lookback_years": 5
+    "max_lookback_years": 5,
+    "annual_risk_free_rate": 0.0012,
+    "identical_annual_excess_return_rate": 0.03
 }
 

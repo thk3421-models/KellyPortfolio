@@ -1,11 +1,29 @@
 {
     "assets": 
     {
-        "stock_symbols": ["SPY", "XOP", "AAPL", "SLG", "VIRT"],
-        "crypto_symbols": ["BTC-USD", "ETH-USD", "ADA-USD"]
+        "stock_symbols": ["SPY", "TLT", "XOM", "AAPL"],
+        "crypto_symbols": ["BTC-USD", "ETH-USD"]
     },
+    "kelly_fraction": 0.15,
     "max_lookback_years": 5,
     "annual_risk_free_rate": 0.0012,
-    "identical_annual_excess_return_rate": 0.03
+    "identical_annual_excess_return_rate": 0.03,
+    "expected_annual_excess_return_rates": {
+        "SPY": 0.02,
+        "TLT": 0.01,
+        "XOM": 0.01,
+        "AAPL": 0.05,
+        "BTC-USD": 0.20,
+        "ETH-USD": 0.20
+    },
+    "capital": 100000,
+    "position_sizes": {
+        "SPY": 0.10,
+        "TLT": 0.00,
+        "XOM": 0.00,
+        "AAPL": 0.00,
+        "BTC-USD": 0.00,
+        "ETH-USD": 0.00
+    }
 }
 

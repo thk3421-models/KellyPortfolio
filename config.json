@@ -9,21 +9,21 @@
     "annual_risk_free_rate": 0.0012,
     "identical_annual_excess_return_rate": 0.03,
     "expected_annual_excess_return_rates": {
-        "SPY": 0.02,
-        "TLT": 0.01,
-        "XOM": 0.01,
-        "AAPL": 0.05,
-        "BTC-USD": 0.20,
-        "ETH-USD": 0.20
+        "SPY": 0.05,
+        "TLT": 0.02,
+        "XOM": 0.03,
+        "AAPL": 0.07,
+        "BTC-USD": 0.07,
+        "ETH-USD": 0.07
     },
     "capital": 100000,
     "position_sizes": {
-        "SPY": 0.10,
-        "TLT": 0.00,
-        "XOM": 0.00,
-        "AAPL": 0.00,
-        "BTC-USD": 0.00,
-        "ETH-USD": 0.00
+        "SPY": 0.40,
+        "TLT": 0.20,
+        "XOM": 0.10,
+        "AAPL": 0.15,
+        "BTC-USD": 0.10,
+        "ETH-USD": 0.05
     }
 }
 

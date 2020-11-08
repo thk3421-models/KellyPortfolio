@@ -12,8 +12,11 @@ This project provides the Kelly Portfolio allocation for users with their own vi
 
 The intended usage of this program is to view the Kelly Portfolio for the securities under consideration, and then consider biasing the real allocations toward the Kelly percentages in hopes of increasing the long term growth rate.  Careful consideration should be applied because the results are widely known to be extremely sensitive to errors in the estimated return rates, and approximately 20 times more sensitive than to errors in the covariance matrix.  Clearly, this is for informational purposes only and not intended as a sole-guide to portfolio allocation. Additionally, please see the discussion below for risk-return discussion around using fractional Kelly to slightly reduce expected growth while dramatically reducing the expected variance.
 
+This is primarily inspired by the fantastic collection of academic papers in:     
+![](http://www.edwardothorp.com/wp-content/uploads/2016/11/kelly-capital-growth-investment-criterion-420x634.jpg)
+
 ## Historical Background
-The Kelly Criterion was invented by Claude Shannon and popularized by Ed Thorp who used it to successfully optimize his wager sizes for gambling games that offered a positive expected value.  The Kelly Criterion is the optimal fraction of total wealth to wager on an individual positive expected value bet such that the expected logarithm of total wealth after repeated wagers is maximized.  Smaller than optimal bet sizes lead to smaller wins which do not compound as quickly, whereas larger than optimal bet sizes suffer from an increased risk of ruin.  For more details on the Kelly Criterion, see https://en.wikipedia.org/wiki/Kelly_criterion(https://en.wikipedia.org/wiki/Kelly_criterion)
+The Kelly Criterion was invented by Claude Shannon and popularized by Ed Thorp who used it to successfully optimize his wager sizes for gambling games that offered a positive expected value.  The Kelly Criterion is the optimal fraction of total wealth to wager on an individual positive expected value bet such that the expected logarithm of total wealth after repeated wagers is maximized.  Smaller than optimal bet sizes lead to smaller wins which do not compound as quickly, whereas larger than optimal bet sizes suffer from an increased risk of ruin.  For more details on the Kelly Criterion, see [https://en.wikipedia.org/wiki/Kelly_criterion](https://en.wikipedia.org/wiki/Kelly_criterion)
 
 Ed Thorp would later extend the mathematics of the Kelly Criterion to handle multiple correlated positive expected value bets, i.e. a portfolio of stocks.  The fraction of wealth allocated to each asset is known as the Kelly Portfolio which optimizes the long term compound growth rate of total wealth.  Thorp used the Kelly Portfolio to produce 20% annualized returns over 28 years at his asset management firm, Princeton-Newport Partners, wagering over $80 billion during those years with an average of 100 simultaneous bets of $65,000.  Legendary investors Bill Gross and Warren Buffett have also reportedly used Kelly optimal methods for portfolio management.  There is no free lunch of course; investors will always struggle to find investments that are positive expected value with as little variance as possible.  However, *given the expected returns and expected covariance*, there is an allocation that maximizes the long term growth rate, i.e. the Kelly Portfolio.  
 
@@ -37,7 +40,8 @@ The Kelly Portfolio tends to concentrate allocations among fewer securities and 
 
 ## Installation
 <pre>
-There are a few required modules to ensure are installed first.  Pop open a terminal and run this command:    
+There are a few required modules to ensure are installed first.  
+Pop open a terminal and run this command:    
         pip install argparse datetime json sys numpy pandas yfinance cvxopt   
 To install the code, simply clone the repo by running this command:    
         git clone https://github.com/thk3421-models/KellyPortfolio.git      
@@ -77,6 +81,7 @@ A sample config file looks like this:
 }  
 </pre>
 ## Options, Usage, and Example Output
+<pre>
 The progam is run in the usual way and the options are specified in the cmd line.  
         (required) --config           path to config.json    
         (required) --estimation_mode  custom, historical, identical 
@@ -85,7 +90,7 @@ The progam is run in the usual way and the options are specified in the cmd line
                                       identical uses same return rate for all securities (specified in config file)
         (optional) --price_data       path to alternative price data CSV instead of using Yahoo! Finance (see code to ensure same column headers)   
         (optional) --implied          True or False.  Program will calculate implied returns based on user-input allocations from config file  
-
+</pre>
 A simple example using AAPL, SPY, TLT, XOM, BTC-USD, and ETH-USD:
 <pre>
 python kelly.py --config config.json --estimation_mode custom

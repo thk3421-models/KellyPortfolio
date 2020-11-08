@@ -23,7 +23,7 @@ $$u^* = \arg\max_u \mathbb{E}\left[ \ln(1 + r_f) + \sum_{k=1}^n u_k(r_k - r_f) \
 is the Kelly Portfolio.  The expectation can be rewritten using a Taylor series expansion as:
 $$u^* = \arg\max_u \mathbb{E}\left[\ln(1+r_f) + \sum_{k=1}^{n} \frac{u_k(r_k -r_f)}{1+r} - \frac{1}{2}\sum_{k=1}^{n}\sum_{j=1}^{n}u_k u_j \frac{(r_k-r_f)(r_j-r_f)}{(1+r_f)^2} \right]$$
 which is written more compactly using the usual matrix, covariance notation:
-$$u^* = \arg\max_u \mathbb{E}\left[\ln(1+r_f) + \frac{1}{1+r}((r - r_f)^T u - \frac{1}{2(1+r_f)^2)}u^T \Sigma u}\right]$$
+$$u^* = \arg\max_u E \left[\ln(1+r_f) + \frac{1}{1+r}(r - r_f)^T u - \frac{1}{2(1+r_f)^2)}u^T \Sigma u \right]$$
         
 
 The Kelly Portfolio tends to concentrate allocations among fewer securities and is generally considered too risky.  Practitioners mitigate the risk of Kelly betting by wagering a fraction, typically 1/5 to 1/2, of the fully Kelly allocation and put the rest of the cash into a risk-free asset such as short term treasuries.  The reduced wager size leads to a slower growth rate but is compensated by a reduced risk of ruin.  

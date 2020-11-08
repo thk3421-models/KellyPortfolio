@@ -24,7 +24,11 @@ is the Kelly Portfolio.  The expectation can be rewritten using a Taylor series 
 $$u^* = \arg\max_u \mathbb{E}\left[\ln(1+r_f) + \sum_{k=1}^{n} \frac{u_k(r_k -r_f)}{1+r_f} - \frac{1}{2}\sum_{k=1}^{n}\sum_{j=1}^{n}u_k u_j \frac{(r_k-r_f)(r_j-r_f)}{(1+r_f)^2} \right]$$
 which is written more compactly using the usual matrix, covariance notation:
 $$u^* = \arg\max_u E \left[\ln(1+r_f) + \frac{1}{1+r_f}(r - r_f)^T u - \frac{1}{2(1+r_f)^2}u^T \Sigma u \right]$$
-This is a straight forward quadratic optimization, which can be solved using a convex optimization package (I used cvxopt).  There are constraints to consider however, such as whether to allow short-selling or leverage.  In this program, I've enforced the long-only constraint and disallowed any leverage, i.e. $$u_k >= 0  \hspace{2cm} \sum_{k=1}^{n} u_k = 1$$ which is the most widely applicable situation for non-institutional investors.       
+This is a straight forward quadratic optimization, which can be solved using a convex optimization package (I used cvxopt).  There are constraints to consider however, such as whether to allow short-selling or leverage.  In this program, I've enforced the long-only constraint and disallowed any leverage, i.e. $$u_k >= 0  \hspace{2cm} \sum_{k=1}^{n} u_k = 1$$ which is the most widely applicable situation for non-institutional investors.   
+        
+In the case of no constraints, there is an analytical solution:
+$$u^* = (1+r_f) \Sigma^{-1}(r-r_f)$$
+which will often have both positive and negative weights indicating short sales, and will have no restriction on the total position size, i.e. leverage.  
 
 The Kelly Portfolio tends to concentrate allocations among fewer securities and is generally considered too risky.  Practitioners mitigate the risk of Kelly betting by wagering a fraction, typically 1/5 to 1/2, of the fully Kelly allocation and put the rest of the cash into a risk-free asset such as short term treasuries.  The reduced wager size leads to a slower growth rate but is compensated by a reduced risk of ruin.  The program above is trivially modified to a fractional Kelly portfolio by simply scaling the total capital by the Kelly fraction and then allocating the appropriate percentages, which the program also does for a user's input choice of Kelly fraction.
 
@@ -67,7 +71,7 @@ A sample config file looks like this:
         "ETH-USD": 0.05   
     }  
 }  
-
+</pre>
 ## Options, Usage, and Example Output
 The progam is run in the usual way and the options are specified in the cmd line.  
         (required) --config           path to config.json    
@@ -79,6 +83,7 @@ The progam is run in the usual way and the options are specified in the cmd line
         (optional) --implied          True or False.  Program will calculate implied returns based on user-input allocations from config file  
 
 A simple example using AAPL, SPY, TLT, XOM, BTC-USD, and ETH-USD:
+<pre>
 python kelly.py --config config.json --estimation_mode custom
 
 Downloading adjusted daily close data from Yahoo! Finance   
@@ -102,7 +107,7 @@ SPY      0.76     0.15     0.14  1.00 -0.41  0.70
 TLT     -0.30    -0.03    -0.01 -0.41  1.00 -0.35  
 XOM      0.43     0.12     0.11  0.70 -0.35  1.00  
 ****************************************************************************************************  
-GBM Kelly Weights and no constraints on shorting or leverage  
+Unconstrained Kelly Weights (no constraints on shorting or leverage)  
          Weights  Capital_Allocation  
 AAPL        0.14           142747.62  
 BTC-USD     0.08            83347.47  

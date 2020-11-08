@@ -35,11 +35,12 @@ which will often have both positive and negative weights indicating short sales,
 The Kelly Portfolio tends to concentrate allocations among fewer securities and is generally considered too risky.  Practitioners mitigate the risk of Kelly betting by wagering a fraction, typically 1/5 to 1/2, of the fully Kelly allocation and put the rest of the cash into a risk-free asset such as short term treasuries.  The reduced wager size leads to a slower growth rate but is compensated by a reduced risk of ruin.  The reduction in expected return and expected variance is not linear!  In simulations, 1/4 Kelly approximately reduces the expected return by 20% but reduces the variance by a whopping 80%!  The math outlined above is trivially modified to accommodate a fractional Kelly portfolio by simply scaling the total capital by the Kelly fraction and then allocating the appropriate percentages.  The code in this project takes a user's input choice of Kelly fraction from the config file and handles everything automatically. 
 
 ## Installation
+<pre>
 There are a few required modules to ensure are installed first.  Pop open a terminal and run this command:    
         pip install argparse datetime json sys numpy pandas yfinance cvxopt   
 To install the code, simply clone the repo by running this command:    
         git clone https://github.com/thk3421-models/KellyPortfolio.git      
-
+</pre>
 ## Configuration
 The user must specify several self-explanatory items in the configuration file using the JSON format.  Most importantly, the user can input their expected annual returns for each security. Capital is the total cash amount to be allocated and kelly_fraction is the percentage of the fully Kelly portfolio to allocate.  The symbols used must be valid Yahoo! Finance symbols.  Max_lookback_years is the number of years of daily data requested from Yahoo!.  The position_sizes element is optional, and is only used if the user wants to invert the problem and see what the implied annual-return values are *given* then position_sizes.  The identical_annual_excess_return_rate is optional, and is used if the user wishes to apply the same return rate to all securities and simply let the covariance matrix determine the optimization results.
 

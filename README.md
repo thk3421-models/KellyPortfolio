@@ -28,8 +28,7 @@ which is written more compactly using the usual matrix, covariance notation:
 $$u^* = \arg\max_u E \left[\ln(1+r_f) + \frac{1}{1+r_f}(r - r_f)^T u - \frac{1}{2(1+r_f)^2}u^T \Sigma u \right]$$
 This is a straight forward quadratic optimization, which can be solved using a convex optimization package (I used cvxopt).  There are constraints to consider however, such as whether to allow short-selling or leverage.  In this program, I've enforced the long-only constraint and disallowed any leverage, i.e. $$u_k >= 0  \hspace{2cm} \sum_{k=1}^{n} u_k = 1$$ which is the most widely applicable situation for non-institutional investors.   
         
-In the case of no constraints, there is an analytical solution:   
-$$u^* = (1+r_f) \Sigma^{-1}(r-r_f)$$  
+In the case of no constraints, there is an analytical solution: $$u^* = (1+r_f) \Sigma^{-1}(r-r_f)$$  
 which will often have both positive and negative weights indicating short sales, and will have no restriction on the total leverage.  
 
 The Kelly Portfolio tends to concentrate allocations among fewer securities and is generally considered too risky.  Practitioners mitigate the risk of Kelly betting by wagering a fraction, typically 1/5 to 1/2, of the fully Kelly allocation and put the rest of the cash into a risk-free asset such as short term treasuries.  The reduced wager size leads to a slower growth rate but is compensated by a reduced risk of ruin.  The reduction in expected return and expected variance is not linear!  In simulations, 1/4 Kelly approximately reduces the expected return by 20% but reduces the variance by a whopping 80%!  The math outlined above is trivially modified to accommodate a fractional Kelly portfolio by simply scaling the total capital by the Kelly fraction and then allocating the appropriate percentages.  The code in this project takes a user's input choice of Kelly fraction from the config file and handles everything automatically. 

@@ -78,8 +78,8 @@ def annual_covar(excess_returns):
         sys.exit(-1)
     return ann_covar
 
-def kelly_optimize_normal(M, C):
-    "calc kelly weights under GBM returns assumption"
+def kelly_optimize_unconstrained(M, C):
+    "calc unconstrained kelly weights"
     results = np.linalg.inv(C) @ M
     kelly = pd.DataFrame(results.values, index=C.columns, columns=['Weights'])
     return kelly
@@ -159,8 +159,8 @@ def main():
     print('Estimated Correlation Matrix of Annualized Excess Returns (rounded to 2 decimal places)')
     print(correlation_from_covariance(covar).round(2))
     print('*'*100)
-    gbm_kelly_weights = kelly_optimize_normal(mu.transpose(), covar)
-    display_results(gbm_kelly_weights, config, 'GBM Kelly Weights and no constraints on shorting or leverage')
+    unc_kelly_weights = kelly_optimize_unconstrained(mu.transpose(), covar)
+    display_results(unc_kelly_weights, config, 'Unconstrained Kelly Weights (no constraints on shorting or leverage')
     print('Begin optimization')
     kelly_weights = kelly_optimize(mu.transpose(), covar, config)
     print('*'*100)

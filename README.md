@@ -81,6 +81,7 @@ A sample config file looks like this:
 }  
 </pre>
 ## Options, Usage, and Example Output
+<pre>
 The progam is run in the usual way and the options are specified in the cmd line.  
         (required) --config           path to config.json    
         (required) --estimation_mode  custom, historical, identical 
@@ -89,7 +90,7 @@ The progam is run in the usual way and the options are specified in the cmd line
                                       identical uses same return rate for all securities (specified in config file)
         (optional) --price_data       path to alternative price data CSV instead of using Yahoo! Finance (see code to ensure same column headers)   
         (optional) --implied          True or False.  Program will calculate implied returns based on user-input allocations from config file  
-
+</pre>
 A simple example using AAPL, SPY, TLT, XOM, BTC-USD, and ETH-USD:
 <pre>
 python kelly.py --config config.json --estimation_mode custom

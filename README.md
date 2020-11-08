@@ -40,7 +40,8 @@ The Kelly Portfolio tends to concentrate allocations among fewer securities and 
 
 ## Installation
 <pre>
-There are a few required modules to ensure are installed first.  Pop open a terminal and run this command:    
+There are a few required modules to ensure are installed first.  
+Pop open a terminal and run this command:    
         pip install argparse datetime json sys numpy pandas yfinance cvxopt   
 To install the code, simply clone the repo by running this command:    
         git clone https://github.com/thk3421-models/KellyPortfolio.git      

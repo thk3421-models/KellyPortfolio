@@ -21,10 +21,10 @@ Regardless of the portfolio allocation strategy an investory employs, it is wort
 The Kelly Portfolio is defined through an optimization problem which optimizes the long term compound growth rate of total wealth, or equivalently (see literature refs <add here>) the log of the total expected wealth.  For a set of correlated assets S_k, a risk-free bond with interest rate r_f, the vector of expected returns for each asset r_k, then the vector of portfolio weights $$u^* = [u_1, \ldots, u_n]$$ given by:
 $$u^* = \arg\max_u \mathbb{E}\left[ \ln(1 + r_f) + \sum_{k=1}^n u_k(r_k - r_f) \right]$$
 is the Kelly Portfolio.  The expectation can be rewritten using a Taylor series expansion as:
-$$u^* = \arg\max_u \mathbb{E}\left[\ln(1+r_f) + \sum_{k=1}^{n} \frac{u_k(r_k -r_f)}{1+r} - \frac{1}{2}\sum_{k=1}^{n}\sum_{j=1}^{n}u_k u_j \frac{(r_k-r_f)(r_j-r_f)}{(1+r_f)^2} \right]$$
+$$u^* = \arg\max_u \mathbb{E}\left[\ln(1+r_f) + \sum_{k=1}^{n} \frac{u_k(r_k -r_f)}{1+r_f} - \frac{1}{2}\sum_{k=1}^{n}\sum_{j=1}^{n}u_k u_j \frac{(r_k-r_f)(r_j-r_f)}{(1+r_f)^2} \right]$$
 which is written more compactly using the usual matrix, covariance notation:
-$$u^* = \arg\max_u E \left[\ln(1+r_f) + \frac{1}{1+r}(r - r_f)^T u - \frac{1}{2(1+r_f)^2}u^T \Sigma u \right]$$
-This is a straight forward quadratic optimization, which can be solved using a convex optimization package (I used cvxopt).  There are constraints to consider however, such as whether to allow short-selling or leverage.  In this program, I've enforced the long-only constraint and disallowed any leverage, i.e. $$u_k >= 0, \sum_{k=1}^{n} u_k = 1$$, which is the most widely applicable situation for non-institutional investors.       
+$$u^* = \arg\max_u E \left[\ln(1+r_f) + \frac{1}{1+r_f}(r - r_f)^T u - \frac{1}{2(1+r_f)^2}u^T \Sigma u \right]$$
+This is a straight forward quadratic optimization, which can be solved using a convex optimization package (I used cvxopt).  There are constraints to consider however, such as whether to allow short-selling or leverage.  In this program, I've enforced the long-only constraint and disallowed any leverage, i.e. $$u_k >= 0  \hspace{2cm} \sum_{k=1}^{n} u_k = 1$$ which is the most widely applicable situation for non-institutional investors.       
 
 The Kelly Portfolio tends to concentrate allocations among fewer securities and is generally considered too risky.  Practitioners mitigate the risk of Kelly betting by wagering a fraction, typically 1/5 to 1/2, of the fully Kelly allocation and put the rest of the cash into a risk-free asset such as short term treasuries.  The reduced wager size leads to a slower growth rate but is compensated by a reduced risk of ruin.  The program above is trivially modified to a fractional Kelly portfolio by simply scaling the total capital by the Kelly fraction and then allocating the appropriate percentages, which the program also does for a user's input choice of Kelly fraction.
 
@@ -35,8 +35,111 @@ To install the code, simply clone the repo by running this command:
         git clone https://github.com/thk3421-models/KellyPortfolio.git      
 
 ## Configuration
+The user must specify several self-explanatory items in the configuration file using the JSON format.  Most importantly, the user can input their expected annual returns for each security. Capital is the total cash amount to be allocated and kelly_fraction is the percentage of the fully Kelly portfolio to allocate.  The symbols used must be valid Yahoo! Finance symbols.  Max_lookback_years is the number of years of daily data requested from Yahoo!.  The position_sizes element is optional, and is only used if the user wants to invert the problem and see what the implied annual-return values are *given* then position_sizes.  The identical_annual_excess_return_rate is optional, and is used if the user wishes to apply the same return rate to all securities and simply let the covariance matrix determine the optimization results.
 
-## Usage
+A sample config file looks like this:   
+{  
+    "assets":  
+    {   
+        "stock_symbols": ["SPY", "TLT", "XOM", "AAPL"],  
+        "crypto_symbols": ["BTC-USD", "ETH-USD"]  
+    },  
+    "kelly_fraction": 0.15,  
+    "max_lookback_years": 5,  
+    "annual_risk_free_rate": 0.008,  
+    "identical_annual_excess_return_rate": 0.03,  
+    "expected_annual_excess_return_rates": {  
+        "SPY": 0.05,  
+        "TLT": 0.02,  
+        "XOM": 0.03,  
+        "AAPL": 0.07,  
+        "BTC-USD": 0.07,  
+        "ETH-USD": 0.07  
+    },  
+    "capital": 1000000,  
+    "position_sizes": {  
+        "SPY": 0.40,  
+        "TLT": 0.20,  
+        "XOM": 0.10,  
+        "AAPL": 0.15,  
+        "BTC-USD": 0.10,  
+        "ETH-USD": 0.05   
+    }  
+}  
 
+## Options, Usage, and Example Output
+The progam is run in the usual way and the options are specified in the cmd line.  
+        (required) --config           path to config.json    
+        (required) --estimation_mode  custom, historical, identical 
+                                      custom uses the user-specified return rates from the config file
+                                      historical uses the historical mean return rate for each security
+                                      identical uses same return rate for all securities (specified in config file)
+        (optional) --price_data       path to alternative price data CSV instead of using Yahoo! Finance (see code to ensure same column headers)   
+        (optional) --implied          True or False.  Program will calculate implied returns based on user-input allocations from config file  
 
+A simple example using AAPL, SPY, TLT, XOM, BTC-USD, and ETH-USD:
+python kelly.py --config config.json --estimation_mode custom
 
+Downloading adjusted daily close data from Yahoo! Finance   
+[*********************100%***********************]  6 of 6 completed  
+Condition number of annualized covariance matrix is: 217.06317751637496  
+****************************************************************************************************  
+         Annualized Excess Returns  
+AAPL                          0.07  
+BTC-USD                       0.07  
+ETH-USD                       0.07  
+SPY                           0.05  
+TLT                           0.02  
+XOM                           0.03  
+****************************************************************************************************  
+Estimated Correlation Matrix of Annualized Excess Returns (rounded to 2 decimal places)  
+         AAPL  BTC-USD  ETH-USD   SPY   TLT   XOM  
+AAPL     1.00     0.12     0.12  0.76 -0.30  0.43  
+BTC-USD  0.12     1.00     0.51  0.15 -0.03  0.12  
+ETH-USD  0.12     0.51     1.00  0.14 -0.01  0.11   
+SPY      0.76     0.15     0.14  1.00 -0.41  0.70  
+TLT     -0.30    -0.03    -0.01 -0.41  1.00 -0.35  
+XOM      0.43     0.12     0.11  0.70 -0.35  1.00  
+****************************************************************************************************  
+GBM Kelly Weights and no constraints on shorting or leverage  
+         Weights  Capital_Allocation  
+AAPL        0.14           142747.62  
+BTC-USD     0.08            83347.47  
+ETH-USD    -0.02           -15931.34  
+SPY         2.30          2295577.46  
+TLT         2.20          2200074.94  
+XOM        -0.40          -400766.44  
+Cash: -3305050.0  
+****************************************************************************************************  
+Begin optimization  
+     pcost       dcost       gap    pres   dres  
+ 0: -1.7847e-02 -1.0474e+00  1e+00  1e-16  3e+00  
+ 1: -1.9991e-02 -5.4564e-02  3e-02  5e-17  1e-01  
+ 2: -2.8018e-02 -3.2738e-02  5e-03  4e-17  2e-17  
+ 3: -2.9596e-02 -2.9967e-02  4e-04  6e-17  8e-18  
+ 4: -2.9719e-02 -2.9751e-02  3e-05  2e-16  2e-17  
+ 5: -2.9738e-02 -2.9741e-02  4e-06  1e-16  3e-17  
+ 6: -2.9740e-02 -2.9741e-02  1e-07  8e-17  1e-17  
+ 7: -2.9741e-02 -2.9741e-02  1e-09  6e-17  8e-18  
+Optimal solution found.  
+****************************************************************************************************  
+Allocation With Full Kelly Weights  
+         Weights  Capital_Allocation  
+AAPL        0.39           386897.09  
+BTC-USD     0.06            57991.59  
+ETH-USD     0.00                0.43  
+SPY         0.33           326538.36  
+TLT         0.23           228572.53  
+XOM         0.00                0.00  
+Cash: 0.0  
+****************************************************************************************************  
+Allocation With Partial Kelly Fraction:0.15  
+         Weights  Capital_Allocation  
+AAPL        0.06            58034.56  
+BTC-USD     0.01             8698.74  
+ETH-USD     0.00                0.06  
+SPY         0.05            48980.75  
+TLT         0.03            34285.88  
+XOM         0.00                0.00  
+Cash: 850000.0  
+****************************************************************************************************  

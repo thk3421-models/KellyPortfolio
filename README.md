@@ -2,6 +2,8 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
         
 # [KellyPortfolio](https://thk3421-models.github.io/KellyPortfolio/)
+Thomas Kirschenmann
+thk3421@gmail.com
 
 ## Motivation
 The goal of this project is to assist an investor by calculating the Kelly optimal portfolio allocation, *conditional on the investor's view of expected returns and covariance* of the assets. It is logical to separate portfolio allocation from the price prediction forecasts.  Everyone has their own view on the difficulty or outright futility of predicting future market prices (active managers vs. strict efficient market hypothesis followers).  Despite these differences, all portfolio managers are required to allocate capital among risky assets.  They are forced to answer the question: "conditional on my views of the future, what is the optimal portfolio allocation that maximizes growth?" 

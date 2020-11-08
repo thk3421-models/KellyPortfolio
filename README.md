@@ -18,7 +18,8 @@ Many investors instead of choose to allocate the portfolio such that the mean/co
 Regardless of the portfolio allocation strategy an investory employs, it is worthwhile and interesting to know how it deviates from the Kelly optimal allocation.  This tool provides that information, and a portfolio manager is free to use it however he pleases to bias his allocations in hopes of increasing the long term growth rate.
 
 ## Mathematical Definition
-The Kelly Portfolio is defined through an optimization problem which optimizes the long term compound growth rate of total wealth.  For a set of $$n$$ correlated assets 
+The Kelly Portfolio is defined through an optimization problem which optimizes the long term compound growth rate of total wealth.  For a set of $$n$$ correlated assets $$S_k, k=1,\ldots\n$$ and a risk-free bond with rate $$r_f$$, then we seek to the solution to the following optimization:
+
 
 
 The Kelly Portfolio tends to concentrate allocations among fewer securities and is generally considered too risky.  Practitioners mitigate the risk of Kelly betting by wagering a fraction, typically 1/5 to 1/2, of the fully Kelly allocation and put the rest of the cash into a risk-free asset such as short term treasuries.  The reduced wager size leads to a slower growth rate but is compensated by a reduced risk of ruin.  

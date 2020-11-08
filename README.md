@@ -24,15 +24,15 @@ is the Kelly Portfolio.  The expectation can be rewritten using a Taylor series 
 $$u^* = \arg\max_u \mathbb{E}\left[\ln(1+r_f) + \sum_{k=1}^{n} \frac{u_k(r_k -r_f)}{1+r} - \frac{1}{2}\sum_{k=1}^{n}\sum_{j=1}^{n}u_k u_j \frac{(r_k-r_f)(r_j-r_f)}{(1+r_f)^2} \right]$$
 which is written more compactly using the usual matrix, covariance notation:
 $$u^* = \arg\max_u E \left[\ln(1+r_f) + \frac{1}{1+r}(r - r_f)^T u - \frac{1}{2(1+r_f)^2}u^T \Sigma u \right]$$
-This is a straight forward quadratic optimization, which can be solved using a convex optimization package (I used cvxopt).  There are constraints to consider however, such as whether to allow short-selling or leverage.  In this program, I've enforced the long-only constraint, i.e. $$u_k >= 0$$ and disallowed any leverage, $$\sum{k=1}^{n} u_k = 1$$, which is the most widely applicable situation for non-institutional investors.       
+This is a straight forward quadratic optimization, which can be solved using a convex optimization package (I used cvxopt).  There are constraints to consider however, such as whether to allow short-selling or leverage.  In this program, I've enforced the long-only constraint and disallowed any leverage, i.e. $$u_k >= 0, \sum_{k=1}^{n} u_k = 1$$, which is the most widely applicable situation for non-institutional investors.       
 
 The Kelly Portfolio tends to concentrate allocations among fewer securities and is generally considered too risky.  Practitioners mitigate the risk of Kelly betting by wagering a fraction, typically 1/5 to 1/2, of the fully Kelly allocation and put the rest of the cash into a risk-free asset such as short term treasuries.  The reduced wager size leads to a slower growth rate but is compensated by a reduced risk of ruin.  The program above is trivially modified to a fractional Kelly portfolio by simply scaling the total capital by the Kelly fraction and then allocating the appropriate percentages, which the program also does for a user's input choice of Kelly fraction.
 
 ## Installation
-There are a few required modules to ensure are installed first.  Pop open a terminal and run this command:
-        pip install argparse json numpy pandas yfinance
-To install the code, simply clone the repo by running this command:
-        git clone https://github.com/thk3421-models/KellyPortfolio.git
+There are a few required modules to ensure are installed first.  Pop open a terminal and run this command:    
+        pip install argparse json numpy pandas yfinance   
+To install the code, simply clone the repo by running this command:    
+        git clone https://github.com/thk3421-models/KellyPortfolio.git      
 
 ## Configuration
 

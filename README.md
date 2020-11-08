@@ -12,6 +12,9 @@ This project provides the Kelly Portfolio allocation for users with their own vi
 
 The intended usage of this program is to view the Kelly Portfolio for the securities under consideration, and then consider biasing the real allocations toward the Kelly percentages in hopes of increasing the long term growth rate.  Careful consideration should be applied because the results are widely known to be extremely sensitive to errors in the estimated return rates, and approximately 20 times more sensitive than to errors in the covariance matrix.  Clearly, this is for informational purposes only and not intended as a sole-guide to portfolio allocation. Additionally, please see the discussion below for risk-return discussion around using fractional Kelly to slightly reduce expected growth while dramatically reducing the expected variance.
 
+This is primarily inspired by the fantastic collection of academic papers in the book: 
+[!The Kelly Capital Growth Investment Criterion] (http://www.edwardothorp.com/wp-content/uploads/2016/11/kelly-capital-growth-investment-criterion-420x634.jpg)
+
 ## Historical Background
 The Kelly Criterion was invented by Claude Shannon and popularized by Ed Thorp who used it to successfully optimize his wager sizes for gambling games that offered a positive expected value.  The Kelly Criterion is the optimal fraction of total wealth to wager on an individual positive expected value bet such that the expected logarithm of total wealth after repeated wagers is maximized.  Smaller than optimal bet sizes lead to smaller wins which do not compound as quickly, whereas larger than optimal bet sizes suffer from an increased risk of ruin.  For more details on the Kelly Criterion, see https://en.wikipedia.org/wiki/Kelly_criterion(https://en.wikipedia.org/wiki/Kelly_criterion)
 

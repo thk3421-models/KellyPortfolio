@@ -37,6 +37,7 @@ To install the code, simply clone the repo by running this command:
 ## Configuration
 The user must specify several self-explanatory items in the configuration file using the JSON format.  Most importantly, the user can input their expected annual returns for each security. Capital is the total cash amount to be allocated and kelly_fraction is the percentage of the fully Kelly portfolio to allocate.  The symbols used must be valid Yahoo! Finance symbols.  Max_lookback_years is the number of years of daily data requested from Yahoo!.  The position_sizes element is optional, and is only used if the user wants to invert the problem and see what the implied annual-return values are *given* then position_sizes.  The identical_annual_excess_return_rate is optional, and is used if the user wishes to apply the same return rate to all securities and simply let the covariance matrix determine the optimization results.
 
+<pre>
 A sample config file looks like this:   
 {  
     "assets":  
@@ -143,3 +144,4 @@ TLT         0.03            34285.88
 XOM         0.00                0.00  
 Cash: 850000.0  
 ****************************************************************************************************  
+</pre>

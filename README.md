@@ -26,7 +26,7 @@ Regardless of the portfolio allocation strategy an investory employs, it is wort
 
 ## Mathematical Definition
 The Kelly Portfolio is defined through an optimization problem which optimizes the long term compound growth rate of total wealth, or equivalently (see literature refs <add here>) the log of the total expected wealth.  For a set of correlated assets S_k, a risk-free bond with interest rate r_f, the vector of expected returns for each asset r_k, then the vector of portfolio weights $$u^* = [u_1, \ldots, u_n]$$ given by:
-$$u^* = \arg\max_u \mathbb{E}\left[ \ln(1 + r_f) + \sum_{k=1}^n u_k(r_k - r_f) \right]$$
+$$u^* = \arg\max_u \mathbb{E}\left[ \ln \left \( (1 + r_f) + \sum_{k=1}^n u_k(r_k - r_f) \right \) \right]$$
 is the Kelly Portfolio.  The expectation can be rewritten using a Taylor series expansion as:
 $$u^* = \arg\max_u \mathbb{E}\left[\ln(1+r_f) + \sum_{k=1}^{n} \frac{u_k(r_k -r_f)}{1+r_f} - \frac{1}{2}\sum_{k=1}^{n}\sum_{j=1}^{n}u_k u_j \frac{(r_k-r_f)(r_j-r_f)}{(1+r_f)^2} \right]$$
 which is written more compactly using the usual matrix, covariance notation:

@@ -8,14 +8,15 @@ import pandas as pd
 import yfinance
 from cvxopt import matrix
 from cvxopt.solvers import qp
+from typing import Dict
 
-def load_config(path):
+def load_config(path:str)->Dict:
     "load required config file"
     with open(path) as config_file:
         data = json.load(config_file)
     return data
 
-def load_prices(config):
+def load_prices(config:Dict)->pd.DataFrame:
     "load prices from web or from local file"
     if OPTIONS.price_data is not None:
         try:
@@ -56,14 +57,14 @@ def load_prices(config):
     price_data = price_data.sort_index()
     return price_data
 
-def annual_excess_returns(prices, config):
-    "Stock data only changes on weekdays. Crypto data is available all days.\
-    Compute daily returns using Friday to Monday returns for all data"
+def annual_excess_returns(prices:pd.DataFrame, config:Dict)->pd.DataFrame:
+    '''Stock data only changes on weekdays. Crypto data is available all days.
+       Compute daily returns using Friday to Monday returns for all data'''
     returns = prices[prices.index.dayofweek < 5].pct_change(1)
     excess_returns = returns - config['annual_risk_free_rate'] / 252
     return excess_returns
 
-def annual_covar(excess_returns):
+def annual_covar(excess_returns:pd.DataFrame)->pd.DataFrame:
     "annualized covariance of excess returns"
     ann_covar = excess_returns.cov() * 252
     print('Condition number of annualized covariance matrix is:', np.linalg.cond(ann_covar))
@@ -78,13 +79,13 @@ def annual_covar(excess_returns):
         sys.exit(-1)
     return ann_covar
 
-def kelly_optimize_unconstrained(M, C):
+def kelly_optimize_unconstrained(M:pd.DataFrame, C:pd.DataFrame)->pd.DataFrame:
     "calc unconstrained kelly weights"
     results = np.linalg.inv(C) @ M
     kelly = pd.DataFrame(results.values, index=C.columns, columns=['Weights'])
     return kelly
 
-def kelly_optimize(M_df, C_df, config):
+def kelly_optimize(M_df:pd.DataFrame, C_df:pd.DataFrame, config:Dict)->pd.DataFrame:
     "objective function to maximize is: g(F) = r + F^T(M-R) - F^TCF/2"
     r = config['annual_risk_free_rate']
     M = M_df.to_numpy()
@@ -103,7 +104,7 @@ def kelly_optimize(M_df, C_df, config):
     kelly = pd.DataFrame(kelly, index=C_df.columns, columns=['Weights'])
     return kelly
 
-def display_results(df, config, msg):
+def display_results(df:pd.DataFrame, config:Dict, msg:str)->None:
     "display asset allocations"
     df['Capital_Allocation'] = df['Weights'] * config['capital']
     print(msg)
@@ -112,14 +113,15 @@ def display_results(df, config, msg):
     print('Cash:', np.round(cash))
     print('*'*100)
 
-def kelly_implied(covar, config):
+def kelly_implied(covar:pd.DataFrame, config:Dict)->pd.DataFrame:
     "caculate return rates implied from allocation weights: mu = C*F"
     F = pd.DataFrame.from_dict(config['position_sizes'], orient='index').transpose()
     F = F[covar.columns]
     implied_mu = covar @ F.transpose()
     implied_mu.columns = ['implied_return_rate']
     return implied_mu
-def correlation_from_covariance(covariance):
+
+def correlation_from_covariance(covariance:pd.DataFrame)->pd.DataFrame:
     v = np.sqrt(np.diag(covariance))
     outer_v = np.outer(v, v)
     correlation = covariance / outer_v
@@ -144,7 +146,7 @@ def main():
     else:
         print('unexpected estimation mode for annual excess return rates')
         sys.exit(-1)
-    mu = mu[covar.columns]
+    mu = mu[covar.columns].transpose()
 
     if OPTIONS.implied is not None and OPTIONS.implied.upper() == 'TRUE':
         implied_returns = kelly_implied(covar, config)
@@ -152,17 +154,17 @@ def main():
         print(implied_returns.round(2))
         return 0
     print('*'*100)
-    ann_excess_returns = mu.transpose()
+    ann_excess_returns = mu
     ann_excess_returns.columns = ['Annualized Excess Returns']
     print(ann_excess_returns)
     print('*'*100)
     print('Estimated Correlation Matrix of Annualized Excess Returns (rounded to 2 decimal places)')
     print(correlation_from_covariance(covar).round(2))
     print('*'*100)
-    unc_kelly_weights = kelly_optimize_unconstrained(mu.transpose(), covar)
+    unc_kelly_weights = kelly_optimize_unconstrained(mu, covar)
     display_results(unc_kelly_weights, config, 'Unconstrained Kelly Weights (no constraints on shorting or leverage')
     print('Begin optimization')
-    kelly_weights = kelly_optimize(mu.transpose(), covar, config)
+    kelly_weights = kelly_optimize(mu, covar, config)
     print('*'*100)
     display_results(kelly_weights, config, 'Allocation With Full Kelly Weights')
     kelly_fraction = float(config['kelly_fraction'])

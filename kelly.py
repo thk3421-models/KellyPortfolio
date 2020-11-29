@@ -8,6 +8,7 @@ import pandas as pd
 import yfinance
 from cvxopt import matrix
 from cvxopt.solvers import qp
+from sklearn.covariance import LedoitWolf
 from typing import Dict
 
 def load_config(path:str)->Dict:
@@ -64,9 +65,13 @@ def annual_excess_returns(prices:pd.DataFrame, config:Dict)->pd.DataFrame:
     excess_returns = returns - config['annual_risk_free_rate'] / 252
     return excess_returns
 
-def annual_covar(excess_returns:pd.DataFrame)->pd.DataFrame:
+def annual_covar(excess_returns:pd.DataFrame, config:Dict)->pd.DataFrame:
     "annualized covariance of excess returns"
-    ann_covar = excess_returns.cov() * 252
+    if config['use_Ledoit_Wolf'] == True:
+        lw = LedoitWolf().fit(excess_returns.dropna()).covariance_
+        ann_covar = pd.DataFrame(lw, columns=excess_returns.columns) * 252
+    else:
+        ann_covar = excess_returns.cov() * 252
     print('Condition number of annualized covariance matrix is:', np.linalg.cond(ann_covar))
     try:
         eigvals, __ = np.linalg.eig(ann_covar)
@@ -133,7 +138,7 @@ def main():
     config = load_config(OPTIONS.config)
     prices = load_prices(config)
     excess_returns = annual_excess_returns(prices, config)
-    covar = annual_covar(excess_returns)
+    covar = annual_covar(excess_returns, config)
     mu = pd.DataFrame(columns=covar.columns)
     if OPTIONS.estimation_mode == 'identical':
         rate = config['identical_annual_excess_return_rate']

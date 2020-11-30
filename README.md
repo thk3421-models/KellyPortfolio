@@ -47,7 +47,9 @@ To install the code, simply clone the repo by running this command:
         git clone https://github.com/thk3421-models/KellyPortfolio.git      
 </pre>
 ## Configuration
-The user must specify several self-explanatory items in the configuration file using the JSON format.  Most importantly, the user can input their expected annual returns for each security. Capital is the total cash amount to be allocated and kelly_fraction is the percentage of the fully Kelly portfolio to allocate.  The symbols used must be valid Yahoo! Finance symbols.  Max_lookback_years is the number of years of daily data requested from Yahoo!.  The position_sizes element is optional, and is only used if the user wants to invert the problem and see what the implied annual-return values are *given* then position_sizes.  The identical_annual_excess_return_rate is optional, and is used if the user wishes to apply the same return rate to all securities and simply let the covariance matrix determine the optimization results.
+The user must specify several self-explanatory items in the configuration file using the JSON format.  Most importantly, the user can input their expected annual returns for each security. Capital is the total cash amount to be allocated and kelly_fraction is the percentage of the fully Kelly portfolio to allocate.  The symbols used must be valid Yahoo! Finance symbols.  Max_lookback_years is the number of years of daily data requested from Yahoo!.  The max_position_size is optional, and should be used with care because imposing a position size constraint can dramatically change the result, effectively nullyfing the optimality of the Kelly criterion.  
+
+The position_sizes element is optional, and is only used if the user wants to invert the problem and see what the implied annual-return values are *given* then position_sizes.  The identical_annual_excess_return_rate is optional, and is used if the user wishes to apply the same return rate to all securities and simply let the covariance matrix determine the optimization results.
 
 <pre>
 A sample config file looks like this:   
@@ -69,6 +71,7 @@ A sample config file looks like this:
         "BTC-USD": 0.07,  
         "ETH-USD": 0.07  
     },  
+    "max_position_size", 0.99,
     "capital": 1000000,  
     "position_sizes": {  
         "SPY": 0.40,  

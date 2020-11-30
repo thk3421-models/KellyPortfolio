@@ -102,6 +102,24 @@ def kelly_optimize(M_df:pd.DataFrame, C_df:pd.DataFrame, config:Dict)->pd.DataFr
     G = matrix(0.0, (n, n))
     G[::n+1] = -1.0
     h = matrix(0.0, (n, 1))
+    try:
+        max_pos_size = float(config['max_position_size'])
+    except KeyError:
+        max_pos_size = None
+    try:
+        min_pos_size = float(config['min_position_size'])
+    except KeyError:
+        min_pos_size = None
+    if min_pos_size is not None:
+        h = matrix(min_pos_size, (n, 1))
+
+    if max_pos_size is not None:
+       h_max = matrix(max_pos_size, (n,1))
+       G_max = matrix(0.0, (n, n))
+       G_max[::n+1] = 1.0
+       G = matrix(np.vstack((G, G_max)))
+       h = matrix(np.vstack((h, h_max)))
+
     S = matrix((1.0 / ((1 + r) ** 2)) * C)
     q = matrix((1.0 / (1 + r)) * (M - r))
     sol = qp(S, -q, G, h, A, b)

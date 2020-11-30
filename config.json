@@ -9,6 +9,7 @@
     "annual_risk_free_rate": 0.008,
     "identical_annual_excess_return_rate": 0.03,
     "use_Ledoit_Wolf": true,
+    "max_position_size": 0.99,
     "expected_annual_excess_return_rates": {
         "SPY": 0.05,
         "TLT": 0.02,
